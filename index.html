@@ -1,14 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <title>DOINB RYZE HACK？英雄联盟 400 CS 24 MIN</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="scripts.js"></script>
-    <canvas id="mainCanvas" width="600" height="600">
-      <script>doTest();</script>
-    </canvas>
-    <body>
-      <h1 id="doinbText">DOINB RYZE HACK？英雄联盟 400 CS 24 MIN</h1>
-      <button onclick="colorText()" type="button">swag</button>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
 </head>
+<body>
+
+    <script>
+    var config = {
+        type: Phaser.AUTO,
+        width: 1600,
+        height: 1600,
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var game = new Phaser.Game(config);
+
+    var minions = [];
+    var frameCount = 0;
+
+    function preload() {
+//        this.load.image('ryze_source', 'resources/ryze.png');
+        this.load.image('caster_source', 'resources/caster.png');
+        this.load.image('background', 'resources/midlane.webp');
+        cs = 0;
+    };
+    function create() {
+        this.add.image(0, 0, 'background').setOrigin(0);
+        cs_counter = this.add.text(800, 100, String("CS: " + cs), {font: "75px Arial", boundsAlignH: "center", boundsAlignV:"middle"}).setOrigin(0.5);
+        this.input.on('gameobjectdown', function(pointer, gameObject){
+          gameObject.active = false;
+          gameObject.destroy();
+          delete gameObject;
+          cs += 1;
+          console.log("Minion killed");
+          cs_counter.setText(String("CS: " + cs));
+        });
+    };
+    function createMinion(target) {
+      console.log("Minion spawned");
+      minion_to_add = (target.add.sprite(1400, 200, 'caster_source').setInteractive().setScale(0.4));
+      minion_to_add.active = true;
+      minions[minions.length] = minion_to_add;
+    };
+    function update() {
+      if (frameCount % 100 == 0) {
+        createMinion(this);
+        frameCount = 0;
+      };
+      for (i = 0; i < minions.length; i++) {
+        minion_i = minions[i];
+        if (minion_i.active == true) {
+          minion_i.on('pointerdown', function(pointer) {
+          });
+          if (minion_i.x < -200) {
+            minion_i.x = 5000;
+            minion_i.active = false;
+            minion_i.destroy();
+            delete minion_i;
+            console.log("Minion despawned");
+          }
+          else {
+            minion_i.x += -2;
+            minion_i.y += 2;
+          };
+        };
+      };
+      frameCount += 1;
+    };
+    </script>
+
+</body>
+</html>
